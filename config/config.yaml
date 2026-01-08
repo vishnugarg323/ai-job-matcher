@@ -1,0 +1,199 @@
+# AI Job Matcher Configuration
+
+# Job Search Preferences
+search:
+  # Job titles to search for (can use keywords)
+  job_titles:
+    - "Software Engineer"
+    - "Python Developer"
+    - "Full Stack Developer"
+    - "Backend Developer"
+    - "Machine Learning Engineer"
+  
+  # Locations in Germany
+  locations:
+    - "Berlin"
+    - "Munich"
+    - "Hamburg"
+    - "Frankfurt"
+    - "Remote"
+  
+  # Experience level
+  experience_level:
+    - "Mid-Level"
+    - "Senior"
+  
+  # Work arrangement
+  work_arrangement:
+    - "Remote"
+    - "Hybrid"
+    - "Onsite"
+  
+  # Minimum salary (annual in EUR)
+  min_salary: 60000
+  
+  # Keywords to include (must have)
+  required_keywords:
+    - "Python"
+    - "AWS"
+    - "Docker"
+  
+  # Keywords to exclude (filter out)
+  exclude_keywords:
+    - "Unpaid"
+    - "Internship"
+  
+  # Maximum age of job postings (days) - only fresh jobs
+  max_job_age_days: 14  # Within 2 weeks
+  
+  # Prioritize fast-hiring companies
+  fast_hiring_priority: true
+
+# Matching Configuration
+matching:
+  # Similarity threshold (0.90 = 90%)
+  threshold: 0.90
+  
+  # Minimum keyword match for ATS compatibility
+  min_keyword_match: 0.75
+  
+  # Weight factors for different sections
+  weights:
+    skills: 0.40
+    experience: 0.30
+    education: 0.15
+    description_match: 0.15
+  
+  # Use AI for semantic matching
+  use_ai_matching: true
+  
+  # Google Gemini models (FREE with Abacus subscription)
+  gemini_embedding_model: "models/text-embedding-004"
+  
+  # Use Gemini Pro for advanced job analysis (FREE)
+  use_gemini_pro: true
+  gemini_chat_model: "gemini-1.5-pro"
+
+# Scraping Configuration
+scraping:
+  # Job portals to scrape
+  enabled_scrapers:
+    - "indeed"
+    - "stepstone"
+    - "linkedin"
+  
+  # Maximum pages to scrape per portal
+  max_pages: 5
+  
+  # Delay between requests (seconds)
+  request_delay: 2
+  
+  # Maximum retries for failed requests
+  max_retries: 3
+  
+  # Timeout for requests (seconds)
+  timeout: 30
+  
+  # Use headless browser
+  headless: true
+  
+  # User agent rotation
+  rotate_user_agent: true
+
+# Scheduling Configuration
+schedule:
+  # Enable scheduled runs
+  enabled: true
+  
+  # Run interval in minutes (30 = every 30 minutes)
+  interval_minutes: 30
+  
+  # Timezone
+  timezone: "Europe/Berlin"
+  
+  # Days to run (0=Monday, 6=Sunday) - empty means all days
+  run_days: []  # Run every day for urgent job search
+
+# Notification Configuration
+notifications:
+  # Enable email notifications
+  email_enabled: true
+  
+  # Minimum jobs to trigger notification
+  min_jobs: 1
+  
+  # Maximum jobs to include in email (TOP MATCHES ONLY)
+  max_jobs_per_email: 10
+  
+  # Include job description in email
+  include_description: true
+  
+  # Email subject template
+  subject_template: "🎯 {count} New Job Matches for {date}"
+
+# Database Configuration
+database:
+  # Database type (sqlite only for now)
+  type: "sqlite"
+  
+  # Path to database file
+  path: "data/jobs.db"
+  
+  # Days to keep job records
+  retention_days: 30
+  
+  # Clean up old records automatically
+  auto_cleanup: true
+
+# Logging Configuration
+logging:
+  # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  level: "INFO"
+  
+  # Log to file
+  log_to_file: true
+  
+  # Log file path
+  log_file: "logs/app.log"
+  
+  # Maximum log file size (MB)
+  max_file_size: 10
+  
+  # Number of backup log files
+  backup_count: 5
+  
+  # Log format
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Resume Configuration
+resume:
+  # Path to resume file
+  path: "data/resume.pdf"
+  
+  # Resume format (txt, pdf, docx)
+  format: "pdf"
+  
+  # Extract sections automatically
+  auto_parse: true
+  
+  # Sections to extract
+  sections:
+    - "skills"
+    - "experience"
+    - "education"
+    - "certifications"
+    - "languages"
+
+# Advanced Settings
+advanced:
+  # Maximum concurrent scraping tasks
+  max_concurrent_scrapers: 3
+  
+  # Cache job listings (minutes)
+  cache_duration: 60
+  
+  # Enable debug mode
+  debug: false
+  
+  # Dry run (don't send emails or save to DB)
+  dry_run: false
