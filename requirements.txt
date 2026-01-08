@@ -25,24 +25,23 @@ sqlalchemy==2.0.23
 # Scheduling
 apscheduler==3.10.4
 
-# Email
-secure-smtplib==0.1.1
+# Email - use standard library instead
+# secure-smtplib==0.1.1
 
 # Utilities
 python-dateutil==2.8.2
 pytz==2023.3
-tqdm==4.66.1
 
 # Logging
 colorlog==6.8.0
 
-# Data Processing
-pandas==2.1.4
-
-# Optional: For better text processing
-nltk==3.8.1
-spacy==3.7.2
-
-# Optional: For resume parsing
+# Resume parsing
 pdfplumber==0.10.3
 python-docx==1.1.0
+pypdf2==3.0.1
+
+# Remove heavy optional packages that may cause timeout
+# pandas==2.1.4
+# nltk==3.8.1
+# spacy==3.7.2
+# tqdm==4.66.1
