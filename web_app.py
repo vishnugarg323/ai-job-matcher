@@ -345,6 +345,9 @@ def run_job_search_for_profile(profile_id, profile):
         # Add LinkedIn if credentials available
         if os.getenv('LINKEDIN_EMAIL') and os.getenv('LINKEDIN_PASSWORD'):
             scrapers.append(LinkedInScraper(config))
+            logger.info("✓ LinkedIn scraper enabled")
+        else:
+            logger.info("ℹ️ LinkedIn disabled - set LINKEDIN_EMAIL/PASSWORD to enable")
         
         all_jobs = []
         jobs_scraped = 0
@@ -366,18 +369,23 @@ def run_job_search_for_profile(profile_id, profile):
         saved = db_manager.save_jobs(profile_id, matched_jobs)
         logger.info(f"💾 Saved {saved} new jobs")
         
-        # Send email notification if matches found
-        if matched_jobs:
+        # Send email notification if matches found and email configured
+        if matched_jobs and os.getenv('EMAIL_SENDER') and os.getenv('EMAIL_PASSWORD'):
             unnotified = db_manager.get_unnotified_jobs(profile_id, limit=10)
             if unnotified:
-                notifier = EmailNotifier(config)
-                notifier.config['notifications']['email'] = profile['email']
-                notifier.send_job_matches(unnotified)
-                
-                # Mark as notified
-                job_ids = [job['id'] for job in unnotified]
-                db_manager.mark_jobs_notified(job_ids)
-                logger.info(f"📧 Sent email with {len(unnotified)} jobs")
+                try:
+                    notifier = EmailNotifier(config)
+                    notifier.config['notifications']['email'] = profile['email']
+                    notifier.send_job_matches(unnotified)
+                    
+                    # Mark as notified
+                    job_ids = [job['id'] for job in unnotified]
+                    db_manager.mark_jobs_notified(job_ids)
+                    logger.info(f"📧 Sent email with {len(unnotified)} jobs to {profile['email']}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Email sending failed (not critical): {e}")
+        elif matched_jobs:
+            logger.info(f"ℹ️ Found {len(matched_jobs)} jobs - email not configured, view in dashboard")
         
         # Update run record
         db_manager.update_run_record(

@@ -22,8 +22,14 @@
    ```bash
    GEMINI_API_KEY=your-key-from-google
    SECRET_KEY=any-random-string
-   EMAIL_SENDER=your-email@gmail.com
-   EMAIL_PASSWORD=your-app-password
+   
+   # Optional - for email notifications (otherwise view in dashboard)
+   # EMAIL_SENDER=your-email@gmail.com
+   # EMAIL_PASSWORD=your-app-password
+   
+   # Optional - for LinkedIn jobs (otherwise just Indeed + StepStone)
+   # LINKEDIN_EMAIL=your-linkedin@example.com
+   # LINKEDIN_PASSWORD=your-password
    ```
    Get Gemini key (FREE): https://makersuite.google.com/app/apikey
 
