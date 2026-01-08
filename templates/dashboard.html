@@ -230,66 +230,32 @@
                         <input type="hidden" id="profile-id">
                         
                         <!-- Basic Info -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Profile Name *</label>
-                                <input type="text" class="form-control" id="profile-name" required 
-                                       placeholder="e.g., Python Developer">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="profile-email" required
-                                       placeholder="your.email@gmail.com">
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Profile Name *</label>
+                            <input type="text" class="form-control" id="profile-name" required 
+                                   placeholder="e.g., Software Engineer Search">
+                            <small class="text-muted">A name to identify this job search</small>
                         </div>
 
-                        <!-- Gemini API Key -->
                         <div class="mb-3">
-                            <label class="form-label">Gemini API Key (Optional)</label>
-                            <input type="text" class="form-control" id="profile-gemini-key"
-                                   placeholder="Leave empty to use global key">
-                            <small class="text-muted">Get free key: https://makersuite.google.com/app/apikey</small>
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="profile-email" required
+                                   placeholder="your.email@gmail.com">
+                            <small class="text-muted">Job matches will be sent to this email</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Job Title *</label>
+                            <input type="text" class="form-control" id="profile-job-title" required
+                                   placeholder="e.g., Software Engineer, Python Developer">
+                            <small class="text-muted">What job are you looking for?</small>
                         </div>
 
                         <!-- Resume Upload -->
                         <div class="mb-3">
-                            <label class="form-label">Resume (PDF/DOCX) *</label>
-                            <input type="file" class="form-control" id="profile-resume" accept=".pdf,.docx,.doc">
-                            <small class="text-muted">Upload your resume in PDF or DOCX format</small>
-                        </div>
-
-                        <!-- Job Preferences -->
-                        <h6 class="mt-4 mb-3"><i class="bi bi-sliders"></i> Job Preferences</h6>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Job Titles (comma-separated)</label>
-                            <input type="text" class="form-control" id="profile-job-titles"
-                                   placeholder="Python Developer, Backend Engineer, ML Engineer">
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Locations (comma-separated)</label>
-                                <input type="text" class="form-control" id="profile-locations"
-                                       placeholder="Berlin, Munich, Remote">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Minimum Salary (EUR/year)</label>
-                                <input type="number" class="form-control" id="profile-salary"
-                                       placeholder="60000">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Required Keywords (comma-separated)</label>
-                            <input type="text" class="form-control" id="profile-keywords"
-                                   placeholder="Python, AWS, Docker">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Exclude Keywords (comma-separated)</label>
-                            <input type="text" class="form-control" id="profile-exclude"
-                                   placeholder="Unpaid, Internship">
+                            <label class="form-label">Resume (PDF only) *</label>
+                            <input type="file" class="form-control" id="profile-resume" accept=".pdf" required>
+                            <small class="text-muted">Upload your resume in PDF format</small>
                         </div>
                     </form>
                 </div>
@@ -506,15 +472,17 @@
             const profileId = document.getElementById('profile-id').value;
             const name = document.getElementById('profile-name').value;
             const email = document.getElementById('profile-email').value;
-            const geminiKey = document.getElementById('profile-gemini-key').value;
+            const jobTitle = document.getElementById('profile-job-title').value;
             
-            // Build job preferences
+            if (!name || !email || !jobTitle) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Build simple job preferences with just the job title
             const jobPreferences = {
-                job_titles: document.getElementById('profile-job-titles').value.split(',').map(s => s.trim()).filter(Boolean),
-                locations: document.getElementById('profile-locations').value.split(',').map(s => s.trim()).filter(Boolean),
-                min_salary: parseInt(document.getElementById('profile-salary').value) || 60000,
-                required_keywords: document.getElementById('profile-keywords').value.split(',').map(s => s.trim()).filter(Boolean),
-                exclude_keywords: document.getElementById('profile-exclude').value.split(',').map(s => s.trim()).filter(Boolean)
+                job_titles: [jobTitle],
+                locations: ["Berlin", "Munich", "Hamburg", "Frankfurt", "Cologne", "Remote"]
             };
 
             try {
@@ -524,14 +492,15 @@
                     response = await fetch(`/api/profiles/${profileId}`, {
                         method: 'PUT',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({name, email, gemini_key: geminiKey, job_preferences: jobPreferences})
+                        body: JSON.stringify({name, email, job_preferences: jobPreferences})
                     });
                 } else {
                     // Create new profile
                     response = await fetch('/api/profiles', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({name, email, gemini_key: geminiKey, job_preferences: jobPreferences})
+                        body: JSON.stringify({name, email, job_preferences: jobPreferences})
+                    });
                     });
                 }
 
