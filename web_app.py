@@ -322,7 +322,7 @@ def run_job_search_for_profile(profile_id, profile):
         
         # Initialize resume parser
         resume_parser = ResumeParser(config)
-        resume_parser.resume_path = profile['resume_path']
+        resume_parser.resume_path = Path(profile['resume_path'])
         resume_text = resume_parser.parse_resume()
         
         if not resume_text:
